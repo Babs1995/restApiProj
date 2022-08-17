@@ -15,4 +15,12 @@ function asyncHandler(cb){
       }
     }
   }
+  router.get('/users', authUser ,asyncHandler(async (req, res) => {
+    const user = req.currentUser; // Store the user on the Request object
+    res.status(200).json({ 
+            firstName: user.firstName,
+            lastName: user.lastName,
+            emailAddress: user.emailAddress,
+     });
+  }));
 
