@@ -1,6 +1,5 @@
 'use strict';
 const express = require('express');
-const auth = require('basic-auth');
 const { authUser } = require('./middleware/auth-user');
 const { User, Courses } = require('./models');
 const { asyncHandler } = require('./middleware/asyncHandler');
@@ -81,7 +80,7 @@ function asyncHandler(cb){
     );
     router.put(
         "/courses/:id",
-        authenticateUser,
+        authUser,
         asyncHandler(async (req, res) => {
           const user = req.currentUser;
           let course;
@@ -108,7 +107,7 @@ function asyncHandler(cb){
             );
     router.delete(
         "/courses/:id",
-        authenticateUser,
+        authUser,
         asyncHandler(async (req, res) => {
             const course = await Courses.findByPk(req.params.id);
             if (course) {
