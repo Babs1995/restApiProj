@@ -15,13 +15,12 @@ const routes = require('./routes');
   }
 })();
 
-app.use('/api', routes);
-
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
 // create the Express app
 const app = express();
+app.use('/api', routes);
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
