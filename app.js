@@ -15,6 +15,8 @@ const routes = require('./routes');
   }
 })();
 
+app.use('/api', routes);
+
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
