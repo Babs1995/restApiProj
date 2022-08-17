@@ -1,9 +1,9 @@
 'use strict';
 const express = require('express');
-const { authUser } = require('./middleware/auth-user');
-const { User, Courses } = require('./models');
-const { asyncHandler } = require('./middleware/asyncHandler');
+const User = require('./models').User;
+const Courses = require('./models').Courses;
 const router = express.Router();
+const { authUser } = require('./middleware/auth-user');
 
 function asyncHandler(cb){
     return async (req, res, next) => {
