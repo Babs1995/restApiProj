@@ -16,11 +16,66 @@ function asyncHandler(cb){
     }
   }
   router.get('/users', authUser ,asyncHandler(async (req, res) => {
-    const user = req.currentUser; // Store the user on the Request object
+    const user = req.currentUser; 
     res.status(200).json({ 
             firstName: user.firstName,
             lastName: user.lastName,
             emailAddress: user.emailAddress,
      });
   }));
-
+  router.post(
+    "/users",
+    asyncHandler(async (req, res) => {
+      try {
+        await Users.create(req.body);
+        res.location("/");
+        res.status(201).end();
+      } catch (error) {
+        if (
+            error.name === "SequelizeValidationError" ||
+            error.name === "SequelizeUniqueConstraintError"
+          ) {
+            const errors = error.errors.map((err) => err.message);
+            res.status(400).json({ errors });
+          } else {
+            throw error;
+          }
+        }
+      })
+    );
+    router.get(
+        "/courses",
+        asyncHandler(async (req, res) => {
+          const courses = await Courses.findAll({
+            attributes: {
+              exclude: ['createdAt', 'updatedAt', 'userId']
+            },
+            include:[{
+              model: User,
+              attributes: {
+                exclude:['createdAt', 'updatedAt', 'password']
+              }
+            }]
+          });
+          console.log(courses.map((course) => course.get()));
+          res.json(courses).status(200);
+        })
+      );
+      router.get(
+        "/courses/:id",
+        asyncHandler(async (req, res) => {
+          const course = await Courses.findByPk(req.params.id, {
+            include:[{
+              model: User,
+              attributes: {
+                exclude:['createdAt', 'updatedAt', 'password']
+              }
+            }]
+          });
+          if (course) {   
+            res.json(displayCourseInfo).status(200);
+        } else {
+          res.status(404);
+        }  
+    })
+    );
