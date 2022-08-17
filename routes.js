@@ -15,7 +15,7 @@ function asyncHandler(cb){
       }
     }
   }
-  router.get('/users', authUser ,asyncHandler(async (req, res) => {
+    router.get('/users', authUser ,asyncHandler(async (req, res) => {
     const user = req.currentUser; 
     res.status(200).json({ 
             firstName: user.firstName,
@@ -23,7 +23,7 @@ function asyncHandler(cb){
             emailAddress: user.emailAddress,
      });
   }));
-  router.post(
+    router.post(
     "/users",
     asyncHandler(async (req, res) => {
       try {
@@ -61,23 +61,23 @@ function asyncHandler(cb){
           res.json(courses).status(200);
         })
       );
-      router.get(
-        "/courses/:id",
-        asyncHandler(async (req, res) => {
-          const course = await Courses.findByPk(req.params.id, {
-            include:[{
-              model: User,
-              attributes: {
-                exclude:['createdAt', 'updatedAt', 'password']
-              }
-            }]
-          });
-          if (course) {   
-            res.json(displayCourseInfo).status(200);
-        } else {
-          res.status(404);
-        }  
-    })
+    router.get(
+    "/courses/:id",
+    asyncHandler(async (req, res) => {
+        const course = await Courses.findByPk(req.params.id, {
+        include:[{
+            model: User,
+            attributes: {
+            exclude:['createdAt', 'updatedAt', 'password']
+            }
+        }]
+        });
+        if (course) {   
+        res.json(displayCourseInfo).status(200);
+    } else {
+        res.status(404);
+    }  
+        })
     );
     router.put(
         "/courses/:id",
@@ -105,4 +105,18 @@ function asyncHandler(cb){
                 }
               }
             })
-          );
+            );
+    router.delete(
+        "/courses/:id",
+        authenticateUser,
+        asyncHandler(async (req, res) => {
+            const course = await Courses.findByPk(req.params.id);
+            if (course) {
+                await course.destroy();
+                res.status(204).end();
+                } else {
+                res.status(400).json();
+                }
+        })
+    );
+module.exports = router;
