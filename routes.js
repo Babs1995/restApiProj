@@ -79,3 +79,30 @@ function asyncHandler(cb){
         }  
     })
     );
+    router.put(
+        "/courses/:id",
+        authenticateUser,
+        asyncHandler(async (req, res) => {
+          const user = req.currentUser;
+          let course;
+          try {
+            let courses = await Courses.findByPk(req.params.id);
+            if (courses) {
+              await courses.update(req.body);
+              res.status(204).end();
+            } else {
+              res.status(404).json();
+            } 
+         } catch (error) {
+                if (
+                  error.name === "SequelizeValidationError" ||
+                  error.name === "SequelizeUniqueConstraintError"
+                ) {
+                  const errors = error.errors.map((err) => err.message);
+                  res.status(400).json({ errors });
+                } else {
+                  throw error;
+                }
+              }
+            })
+          );
