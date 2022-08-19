@@ -9,8 +9,10 @@ const routes = require('./routes');
 (async () => {
   try {
     await sequelize.authenticate();
+    console.log('Connection to database successful!')
     await sequelize.sync();
   } catch(error) {
+    console.error('Error connecting to the database:', error)
     throw error;
   }
 })();
@@ -20,6 +22,7 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 
 // create the Express app
 const app = express();
+app.use(express.json());
 app.use('/api', routes);
 
 // setup morgan which gives us http request logging
