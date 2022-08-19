@@ -15,9 +15,9 @@ exports.authUser = async (req, res, next) => {
         });
     
         if (user) {
-          const authenticated = bcrypt.compareSync(credentials.pass, user.password);
+          const auth = bcrypt.compareSync(credentials.pass, user.password);
     
-          if (authenticated) {
+          if (auth) {
             console.log(`Authentication successful for user: ${user.emailAddress}`);
             req.currentUser = user;
           } else {

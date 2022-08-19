@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get(
   "/users",
-  authenticateUser,
+  authUser,
   asyncHandler(async (req, res) => {
     const user = req.currentUser;
     const userInfo = user.dataValues;
@@ -103,7 +103,7 @@ router.get(
 
 router.post(
   "/courses",
-  authenticateUser,
+  authUser,
   asyncHandler(async (req, res) => {
     const user = req.currentUser;
     let course;
@@ -133,7 +133,7 @@ router.post(
 
 router.put(
   "/courses/:id",
-  authenticateUser,
+  authUser,
   asyncHandler(async (req, res) => {
     const user = req.currentUser;
     let course;
@@ -165,7 +165,7 @@ router.put(
 
 router.delete(
   "/courses/:id",
-  authenticateUser,
+  authUser,
   asyncHandler(async (req, res) => {
     const user = req.currentUser;
     const course = await Courses.findByPk(req.params.id);
